@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Screening System</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Heading -->
+
+        <h1>
+            AI Resume Screening System
+        </h1>
+
+        <p class="subtitle">
+            Upload resumes and compare them with
+            the job description using AI-powered ATS scoring.
+        </p>
+
+        <!-- Form -->
+
+        <form action="/analyze"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <!-- Job Description -->
+
+            <label>
+                Enter Job Description
+            </label>
+
+            <textarea
+                name="job_description"
+                placeholder="Paste the job description here..."
+                required>
+            </textarea>
+
+            <!-- Resume Upload -->
+
+            <label>
+                Upload Resume Files (PDF)
+            </label>
+
+            <input
+                type="file"
+                name="resumes"
+                accept=".pdf"
+                multiple
+                required>
+
+            <!-- Submit Button -->
+
+            <button type="submit">
+
+                Analyze Resumes
+
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
