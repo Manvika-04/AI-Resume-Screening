@@ -52,3 +52,13 @@ AI-Resume-Screening/
 
 ```bash
 git clone https://github.com/Manvika-04/AI-Resume-Screening.git
+
+## Project Screenshots
+
+![Screenshot 1](AI Resume screening.png)
+
+![Screenshot 2](AI Resume screening(1).png)
+
+![Screenshot 3](AI Resume screening(2).png)
+
+![Screenshot 4](AI Resume screening(3).png)
