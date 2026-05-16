@@ -53,12 +53,26 @@ AI-Resume-Screening/
 ```bash
 git clone https://github.com/Manvika-04/AI-Resume-Screening.git
 
-## Project Screenshots
+# Project Screenshots
 
-![Screenshot 1](AI Resume screening.png)
+## Resume Upload Interface
 
-![Screenshot 2](AI Resume screening(1).png)
+![AI Resume Screening](AI%20Resume%20screening.png)
 
-![Screenshot 3](AI Resume screening(2).png)
+---
 
-![Screenshot 4](AI Resume screening(3).png)
+## ATS Score Results
+
+![AI Resume Screening](AI%20Resume%20screening(1).png)
+
+---
+
+## Resume Analysis Dashboard
+
+![AI Resume Screening](AI%20Resume%20screening(2).png)
+
+---
+
+## Final ATS Screening Output
+
+![AI Resume Screening](AI%20Resume%20screening(3).png)
