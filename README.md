@@ -73,13 +73,3 @@ AI-Resume-Screening/
 ## Final ATS Screening Output
 
 ![AI Resume Screening](AI%20Resume%20screening(3).png)
-
-## Resume Analysis Dashboard
-
-![AI Resume Screening](AI%20Resume%20screening(2).png)
-
----
-
-## Final ATS Screening Output
-
-![AI Resume Screening](AI%20Resume%20screening(3).png)
