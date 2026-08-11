@@ -2,83 +2,186 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>AI Resume Screening System</title>
 
     <!-- Google Font -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- CSS -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
+    <!-- Flask Static CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 
 <body>
 
     <div class="container">
 
-        <!-- Heading -->
+        <!-- Header -->
+        <div class="header">
 
-        <h1>
-            AI Resume Screening System
-        </h1>
+            <h1>
+                AI Resume Screening System
+            </h1>
 
-        <p class="subtitle">
-            Upload resumes and compare them with
-            the job description using AI-powered ATS scoring.
-        </p>
+            <p class="subtitle">
+                Upload resumes and compare them with the job description
+                using AI-powered ATS scoring.
+            </p>
 
-        <!-- Form -->
+        </div>
 
-        <form action="/analyze"
-              method="POST"
-              enctype="multipart/form-data">
+
+        <!-- Main Form -->
+        <form
+            action="{{ url_for('analyze') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
 
             <!-- Job Description -->
+            <div class="form-group">
 
-            <label>
-                Enter Job Description
-            </label>
+                <label for="job_description">
+                    Enter Job Description
+                </label>
 
-            <textarea
-                name="job_description"
-                placeholder="Paste the job description here..."
-                required>
-            </textarea>
+                <textarea
+                    id="job_description"
+                    name="job_description"
+                    placeholder="Paste the complete job description here..."
+                    required
+                ></textarea>
+
+            </div>
+
 
             <!-- Resume Upload -->
+            <div class="form-group">
 
-            <label>
-                Upload Resume Files (PDF)
-            </label>
+                <label for="resumes">
+                    Upload Resume Files
+                </label>
 
-            <input
-                type="file"
-                name="resumes"
-                accept=".pdf"
-                multiple
-                required>
+                <div class="upload-box">
 
-            <!-- Submit Button -->
+                    <div class="upload-icon">
+                        📄
+                    </div>
 
-            <button type="submit">
+                    <h3>
+                        Upload PDF Resumes
+                    </h3>
 
-                Analyze Resumes
+                    <p>
+                        Select one or multiple PDF resumes
+                    </p>
 
+                    <input
+                        type="file"
+                        id="resumes"
+                        name="resumes"
+                        accept=".pdf,application/pdf"
+                        multiple
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Analyze Button -->
+            <button
+                type="submit"
+                class="analyze-btn"
+            >
+                <span>
+                    Analyze Resumes
+                </span>
+
+                <span class="arrow">
+                    →
+                </span>
             </button>
 
         </form>
 
+
+        <!-- Information -->
+        <div class="info-section">
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    🎯
+                </div>
+
+                <div>
+                    <h3>
+                        ATS Matching
+                    </h3>
+
+                    <p>
+                        Compare resume content with job requirements.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    ⚡
+                </div>
+
+                <div>
+                    <h3>
+                        Fast Analysis
+                    </h3>
+
+                    <p>
+                        Automatically process multiple resumes.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    📊
+                </div>
+
+                <div>
+                    <h3>
+                        ATS Score
+                    </h3>
+
+                    <p>
+                        Get a similarity score for every resume.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 
 </body>
 

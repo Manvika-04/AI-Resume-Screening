@@ -5,95 +5,227 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ATS Results</title>
+    <title>ATS Screening Results</title>
 
     <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
-    <!-- CSS -->
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <!-- Flask Static CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
+
 <body>
 
-    <div class="container">
+    <div class="container results-container">
 
-        <!-- Heading -->
+        <!-- Header -->
+        <div class="header">
 
-        <h1>
-            Resume Screening Results
-        </h1>
+            <h1>
+                Resume Screening Results
+            </h1>
 
-        <p class="subtitle">
-            ATS scores calculated based on job description similarity.
-        </p>
+            <p class="subtitle">
+                ATS scores calculated based on job description
+                and resume content similarity.
+            </p>
+
+        </div>
+
 
         <!-- Results Table -->
 
-        <table>
+        {% if results %}
 
-            <thead>
+        <div class="results-wrapper">
 
-                <tr>
+            <table>
 
-                    <th>
-                        Resume Name
-                    </th>
+                <thead>
 
-                    <th>
-                        ATS Score
-                    </th>
+                    <tr>
 
-                </tr>
+                        <th>
+                            #
+                        </th>
 
-            </thead>
+                        <th>
+                            Resume Name
+                        </th>
 
-            <tbody>
+                        <th>
+                            ATS Score
+                        </th>
 
-                {% for result in results %}
+                        <th>
+                            Match Level
+                        </th>
 
-                <tr>
+                    </tr>
 
-                    <td>
-                        {{ result.filename }}
-                    </td>
+                </thead>
 
-                    <td>
-                        {{ result.score }}%
-                    </td>
 
-                </tr>
+                <tbody>
 
-                {% endfor %}
+                    {% for result in results %}
 
-            </tbody>
+                    <tr>
 
-        </table>
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+                        <td class="resume-name">
+
+                            📄
+
+                            {{ result.filename }}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="score">
+
+                                {{ result.score }}%
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if result.score >= 75 %}
+
+                                <span class="badge excellent">
+                                    Excellent Match
+                                </span>
+
+                            {% elif result.score >= 50 %}
+
+                                <span class="badge good">
+                                    Good Match
+                                </span>
+
+                            {% elif result.score >= 30 %}
+
+                                <span class="badge average">
+                                    Average Match
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge low">
+                                    Low Match
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Result Summary -->
+
+        <div class="summary">
+
+            <div class="summary-card">
+
+                <div class="summary-number">
+                    {{ results|length }}
+                </div>
+
+                <div class="summary-text">
+                    Resumes Analyzed
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-number">
+
+                    {% if results %}
+
+                        {{ results[0].score }}%
+
+                    {% else %}
+
+                        0%
+
+                    {% endif %}
+
+                </div>
+
+                <div class="summary-text">
+                    Highest ATS Score
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- No Results -->
+
+        <div class="no-results">
+
+            <div class="no-results-icon">
+                📄
+            </div>
+
+            <h2>
+                No Results Found
+            </h2>
+
+            <p>
+                No resumes were successfully analyzed.
+            </p>
+
+        </div>
+
+        {% endif %}
+
 
         <!-- Back Button -->
 
         <div class="back-btn">
 
-            <a href="/">
-
-                Analyze More Resumes
-
+            <a href="{{ url_for('home') }}">
+                ← Analyze More Resumes
             </a>
 
         </div>
 
     </div>
+
 
 </body>
 

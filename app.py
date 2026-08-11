@@ -1,95 +1,125 @@
 from flask import Flask, render_template, request
-import os
-import pdfplumber
-from sklearn.feature_extraction.text import CountVectorizer
+from werkzeug.utils import secure_filename
+from PyPDF2 import PdfReader
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import os
 
 app = Flask(__name__)
 
-# Folder to store uploaded resumes
-UPLOAD_FOLDER = "resumes"
+UPLOAD_FOLDER = "uploads"
+ALLOWED_EXTENSIONS = {"pdf"}
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
-# Create resumes folder if not exists
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Function to extract text from PDF
-def extract_text_from_pdf(pdf_path):
 
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def extract_text_from_pdf(filepath):
     text = ""
 
-    with pdfplumber.open(pdf_path) as pdf:
+    try:
+        reader = PdfReader(filepath)
 
-        for page in pdf.pages:
-
+        for page in reader.pages:
             page_text = page.extract_text()
 
             if page_text:
-                text += page_text
+                text += page_text + "\n"
+
+    except Exception as e:
+        print("PDF ERROR:", e)
 
     return text
 
 
-# Function to calculate ATS score
-def calculate_score(resume_text, job_description):
+def calculate_ats_score(job_description, resume_text):
+    if not job_description.strip() or not resume_text.strip():
+        return 0
 
-    documents = [resume_text, job_description]
+    try:
+        documents = [
+            job_description,
+            resume_text
+        ]
 
-    cv = CountVectorizer()
+        vectorizer = TfidfVectorizer(
+            stop_words="english"
+        )
 
-    matrix = cv.fit_transform(documents)
+        tfidf_matrix = vectorizer.fit_transform(documents)
 
-    similarity = cosine_similarity(matrix)[0][1]
+        similarity = cosine_similarity(
+            tfidf_matrix[0:1],
+            tfidf_matrix[1:2]
+        )[0][0]
 
-    return round(similarity * 100, 2)
+        score = round(similarity * 100, 2)
+
+        return score
+
+    except Exception as e:
+        print("SCORING ERROR:", e)
+        return 0
 
 
-# Home Route
 @app.route("/")
 def home():
-
     return render_template("index.html")
 
 
-# Analyze Route
 @app.route("/analyze", methods=["POST"])
 def analyze():
 
-    job_description = request.form["job_description"]
+    job_description = request.form.get("job_description", "").strip()
 
-    uploaded_files = request.files.getlist("resumes")
+    files = request.files.getlist("resumes")
 
     results = []
 
-    for file in uploaded_files:
+    if not job_description:
+        return "Please enter a job description."
 
-        if file.filename.endswith(".pdf"):
+    if not files:
+        return "Please upload at least one resume."
 
-            save_path = os.path.join(
-                app.config["UPLOAD_FOLDER"],
-                file.filename
-            )
+    for file in files:
 
-            file.save(save_path)
+        if file.filename == "":
+            continue
 
-            # Extract text from resume
-            resume_text = extract_text_from_pdf(save_path)
+        if not allowed_file(file.filename):
+            continue
 
-            # Calculate ATS score
-            score = calculate_score(
-                resume_text,
-                job_description
-            )
+        filename = secure_filename(file.filename)
 
-            results.append({
-                "filename": file.filename,
-                "score": score
-            })
+        filepath = os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            filename
+        )
 
-    # Sort by highest ATS score
-    results = sorted(
-        results,
+        file.save(filepath)
+
+        resume_text = extract_text_from_pdf(filepath)
+
+        score = calculate_ats_score(
+            job_description,
+            resume_text
+        )
+
+        results.append({
+            "filename": filename,
+            "score": score
+        })
+
+    if not results:
+        return "No valid PDF resumes were uploaded."
+
+    results.sort(
         key=lambda x: x["score"],
         reverse=True
     )
@@ -100,7 +130,9 @@ def analyze():
     )
 
 
-# Run App
 if __name__ == "__main__":
-
-    app.run(debug=True)
+    app.run(
+        debug=True,
+        host="127.0.0.1",
+        port=5000
+    )

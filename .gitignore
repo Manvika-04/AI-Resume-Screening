@@ -1,0 +1,7 @@
+﻿uploads/
+resumes/*.pdf
+.vscode/
+__pycache__/
+*.pyc
+.venv/
+venv/
